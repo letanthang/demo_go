@@ -1,7 +1,7 @@
 package modeldb
 
 type Person struct {
-	FirstName string
+	FirstName string `json:"first_name" bson:"first_name" gorm:"column:firstname" validate:"email,required`
 	LastName  string
 }
 
