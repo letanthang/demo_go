@@ -8,6 +8,8 @@ import (
 	"log"
 	"net/http"
 
+	"gopkg.in/mgo.v2/bson"
+
 	model "github.com/letanthang/demo_go/model"
 
 	"github.com/letanthang/demo_go/db"
@@ -25,17 +27,38 @@ func main() {
 		log.Panic(err)
 		return
 	}
+	err = UpdatePeople()
+	if err != nil {
+		log.Panic(err)
+		return
+	}
 	fmt.Println("************** success ****************")
 	fmt.Printf("people: %+v", people)
+}
+
+func UpdatePeople() error {
+	sessionClone := db.SessionOrginal.Clone()
+	defer sessionClone.Close()
+
+	selector := bson.M{"id": 7}
+	update := bson.M{"$set": bson.M{"married": false, "first_name": "Thang123"}}
+	err := sessionClone.DB("go3008").C("people").Update(selector, update)
+	return err
 }
 
 func StorePeople(people []model.Person) error {
 	sessionClone := db.SessionOrginal.Clone()
 	defer sessionClone.Close()
 
-	err := sessionClone.DB("go3008").C("people").Insert(people[0])
-	// bulk := sessionClone.DB("go3008").C("people").Bulk()
-	// bulk.Insert(*people...)
+	// err := sessionClone.DB("go3008").C("people").Insert(people[0])
+	bulk := sessionClone.DB("go3008").C("people").Bulk()
+
+	data := []interface{}{}
+	for _, i := range people {
+		data = append(data, i)
+	}
+	bulk.Insert(data...)
+	_, err := bulk.Run()
 	return err
 
 }
