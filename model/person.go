@@ -1,4 +1,4 @@
-package modeldb
+package db1
 
 type Person struct {
 	ID        int    `json:"id" bson:"id"`

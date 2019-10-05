@@ -1,17 +1,21 @@
 package main
 
 import (
+	"encoding/json"
 	"errors"
 	"fmt"
 	"strconv"
 )
 
 type MyInt int
+
 type Student struct {
-	Name      string `json:"name"`
-	Email     string
-	Age       int
-	ClassName string `json:"class_name"`
+	FirstName   string `json:"first_name"`
+	LastName    string `json:"last_name"`
+	Email       string `json:"email"`
+	Age         int    `json:"age"`
+	ClassName   string `json:"class_name"`
+	AcademyName string `json:"acedemy_name"`
 }
 
 func main() {
@@ -26,19 +30,18 @@ func main() {
 	fmt.Println("bInt=", bInt)
 
 	// string
-
 	var aString string
 	aString = "hello"
 	bString := "1000"
 	fmt.Println(aString)
+	// string concat : way 1
 	aString = aString + bString
 	fmt.Println(aString)
 
 	fmt.Printf("%s\n", aString)
 	fmt.Printf("%d\n", aInt)
-
+	// string concat : way 2
 	aString = fmt.Sprintf("hehe %s %d\n", aString, aInt)
-	// aString = aString + " " + strconv.Itoa(aInt)
 	fmt.Println(aString)
 
 	res, err := getAnInterger(bString)
@@ -47,22 +50,31 @@ func main() {
 	aSlice := []int{1, 5, 6, 8}
 	fmt.Println(aSlice)
 	fmt.Printf("%v", aSlice)
-
+	// slice iterate
 	for _, v := range aSlice {
 		fmt.Println(v)
 	}
 
 	aMap := map[string]interface{}{"name": "Phat", "email": "Phat@gmail.com"}
-
 	aMap["age"] = 100
 	fmt.Printf("%v", aMap)
 
-	aStudent := Student{
-		Name:  "Luc",
-		Email: "luc@gmail.com",
-		Age:   80,
+	// map iterate
+	for k, v := range aMap {
+		fmt.Println("key", k, "has value", v)
 	}
-	fmt.Printf("%v+", aStudent)
+
+	aStudent := Student{
+		FirstName:   "Tin",
+		LastName:    "Tran",
+		Email:       "tintran@gmail.com",
+		Age:         80,
+		ClassName:   "golang0110",
+		AcademyName: "Nordic Coder",
+	}
+	bs, _ := json.Marshal(aStudent)
+	dString := string(bs)
+	fmt.Printf("%v+ \n %s", aStudent, dString)
 }
 func getAnInterger(a string) (int, error) {
 	res, _ := strconv.Atoi(a)
