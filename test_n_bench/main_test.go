@@ -40,10 +40,17 @@ func TestMergeChannel(t *testing.T) {
 	}
 
 	// test seen all
-	for v := 0; v < 10; v++ {
+	for v := 1; v < 10; v++ {
 		if _, ok := seen[v]; !ok {
 			t.Errorf("miss value %d", v)
 		}
 	}
+}
 
+func BenchmarkMergeChannel(b *testing.B) {
+	for i := 0; i < b.N; i++ {
+		c := MergeChannel(AsChan(0, 1, 2, 3, 4, 5, 6, 7, 8, 9))
+		for range c {
+		}
+	}
 }
