@@ -12,6 +12,6 @@ func TestSum(t *testing.T) {
 func TestMutiple(t *testing.T) {
 	result := Mutiple(2, 2)
 	if result != 4 {
-		t.Errorf("Sum is fail, 2 * 2 must be 4 but receive %d", result)
+		t.Errorf("Mutiple is fail, 2 * 2 must be 4 but receive %d", result)
 	}
 }
