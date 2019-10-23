@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"os"
+	"syscall"
 )
 
 func main() {
@@ -13,10 +14,17 @@ func main() {
 			fmt.Println("Success! file created", err)
 			return
 		}
-		if e, ok := err.(*os.PathError); ok { //|| e.Err == syscall.ENOSPC
+		if e, ok := err.(*os.PathError); ok && e.Err == syscall.ENOSPC {
 			// deleteTempFiles() // Recover some space.
 
-			fmt.Println("Cannot create the file, err", e)
+			fmt.Println("Cannot create the file: diskspace, err", e)
+			continue
+		}
+
+		if e, ok := err.(*os.PathError); ok && e.Err == syscall.ENOENT {
+			// deleteTempFiles() // Recover some space.
+
+			fmt.Println("Cannot create the file: no such path/directory, err", e)
 			continue
 		}
 
