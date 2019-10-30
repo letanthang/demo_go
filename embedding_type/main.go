@@ -12,6 +12,7 @@ func (b Ball) Bounce() {
 
 type BasketBall struct {
 	Ball
+	Radius int
 	Weight int
 }
 
@@ -44,8 +45,12 @@ func BounceBall(b Ball) {
 }
 
 func main() {
-	bb := BasketBall{Ball{Radius: 5}, 50}
-	bb.Bounce()
+	bb := BasketBall{Ball{5}, 6, 50}
+
+	// fmt.Println(bb.Radius)
+	// bb.Bounce()
+
+	// BounceBall(bb.Ball)
 
 	BounceIt(bb)
 
@@ -54,17 +59,16 @@ func main() {
 	// i = bb
 	// BounceBall(i.(Ball))
 
-	fb := FootBall{Ball{Radius: 5}, 50, 10}
-	fb.Bounce()
-	
-	baseball := BaseBall{&Ball{5}, 60}
-	baseball.Bounce()
-	fmt.Println("access radius",baseball.Radius)
+	// fb := FootBall{Ball{Radius: 5}, 50, 10}
+	// fb.Bounce()
 
+	// baseball := BaseBall{&Ball{5}, 60}
+	// baseball.Bounce()
+	// fmt.Println("access radius",baseball.Radius)
 
-	vb := VolleyBall{&Ball{5}, 60}
-	vb.Bounce()
-	BounceIt(vb)
+	// vb := VolleyBall{&Ball{5}, 60}
+	// vb.Bounce()
+	// BounceIt(vb)
 	// cannot access interface embedded properties
 	// fmt.Println("access radius",vb.Radius)
 }
