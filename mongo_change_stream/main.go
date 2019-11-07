@@ -14,6 +14,8 @@ const (
 	replicaSetName = "mongo-rs"
 )
 
+var Client *mongo.Client
+
 type Post struct {
 	Tile    string `json:"tile" bson:"tile"`
 	Content string `json:"content" bson:"content"`
@@ -29,15 +31,17 @@ type DocumentKeyElem struct {
 	ID string `json:"id" bson:"_id"`
 }
 type CSElem struct {
-	ID            IDELem          `json:"id" bson:"_id"`
-	OperationType string          `json:"operationType" bson:"operationType"`
-	FullDocument  Post            `json:"fullDocument" bson:"fullDocument"`
-	NS            NSELem          `json:"ns" bson:"ns"`
-	DocumentKey   DocumentKeyElem `json:"documentKey" bson:"documentKey"`
+	ID            IDELem      `json:"id" bson:"_id"`
+	OperationType string      `json:"operationType" bson:"operationType"`
+	FullDocument  Post        `json:"fullDocument" bson:"fullDocument"`
+	NS            NSELem      `json:"ns" bson:"ns"`
+	DocumentKey   interface{} `json:"documentKey" bson:"documentKey"`
 }
 
-func main() {
-	uri := "mongodb://mongoadmin:secret@localhost:27017/test_db"
+func connect() {
+	// uri := "mongodb://mongoadmin:secret@localhost:27017"
+	// change stream work only with replica set
+	uri := "mongodb+srv://mongoadmin:secret1234@cluster0-xxyrd.gcp.mongodb.net"
 	client, err := mongo.NewClient(options.Client().ApplyURI(uri))
 	if err != nil {
 		log.Fatal(err)
@@ -46,13 +50,19 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
+	Client = client
+}
 
-	col := client.Database(database).Collection(collection)
+func main() {
 
-	var pipeline interface{}
+	connect()
+	col := Client.Database(database).Collection(collection)
+
+	// var pipeline interface{}
 	ctx := context.Background()
-	stream, err := col.Watch(ctx, pipeline)
+	stream, err := col.Watch(ctx, mongo.Pipeline{})
 	if err != nil {
+		log.Println(err)
 		return
 	}
 	defer stream.Close(ctx)
@@ -64,7 +74,7 @@ func main() {
 			log.Fatal(err)
 		}
 
-		log.Println(elem)
+		log.Printf("event %+v \n", elem)
 	}
 
 	if err := stream.Err(); err != nil {
