@@ -58,9 +58,8 @@ func main() {
 	connect()
 	col := Client.Database(database).Collection(collection)
 
-	// var pipeline interface{}
 	ctx := context.Background()
-	stream, err := col.Watch(ctx, mongo.Pipeline{})
+	stream, err := col.Watch(ctx, mongo.Pipeline{}) // bson.A{}
 	if err != nil {
 		log.Println(err)
 		return
