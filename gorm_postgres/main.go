@@ -10,7 +10,7 @@ import (
 var DB *gorm.DB
 
 type Student struct {
-	ID        int
+	gorm.Model
 	FirstName string `json:"first_name" gorm:"column:first_name"`
 	LastName  string `json:"last_name" gorm:"column:last_name"`
 	Age       int
@@ -25,6 +25,19 @@ func (Student) TableName() string {
 func main() {
 	DB = newDB()
 
+	//insert one
+
+	// aStudent := Student{gorm.Model{ID: 102}, "Nghia", "Nguyen", 100, "golang", "tam@gmail.com"}
+	// DB.Create(&aStudent)
+
+	// soft delete
+
+	filter := map[string]interface{}{}
+
+	filter["id"] = 102
+	DB.Delete(&Student{}, filter)
+
+	// query all
 	var students []Student
 	DB.Find(&students)
 	fmt.Printf("students :%+v", students)
